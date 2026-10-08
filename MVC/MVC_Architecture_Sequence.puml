@@ -1,0 +1,43 @@
+@startuml MVC_Architecture_Sequence
+
+skinparam style strictuml
+skinparam SequenceMessageAlignment center
+skinparam ActorBackgroundColor #E1F5FE
+skinparam ParticipantBackgroundColor #FFFFFF
+skinparam ParticipantBorderColor #0277BD
+skinparam BoxPadding 10
+
+title MVC Architecture Interaction Flow - Task Management System
+
+actor "User" as user
+box "MVC Components" #F5F5F5
+participant "View\n(TaskView)" as view #E3F2FD
+participant "Controller\n(TaskController)" as controller #FFF3E0
+participant "Model\n(Task)" as model #E8F5E9
+end box
+
+== 1. User Action ==
+user -> view : Clicks "Complete Task"
+activate view
+
+view -> controller : completeTask()
+activate controller
+deactivate view
+
+== 2. Business Logic Execution ==
+controller -> model : markAsCompleted()
+activate model
+note over model : Updates internal state\n(isCompleted = true)
+model --> controller : State updated confirmation
+deactivate model
+
+== 3. View Update & Response ==
+controller -> view : showMessage("Task completed!")
+activate view
+controller -> view : displayTaskDetails(title, status)
+
+view --> user : Displays updated task state\n"Status: Completed [X]"
+deactivate view
+deactivate controller
+
+@enduml
